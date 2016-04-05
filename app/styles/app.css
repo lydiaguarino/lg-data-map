@@ -1,0 +1,16 @@
+#world-map-container {
+  background-color: #495867;
+  height: 550px;
+  min-width: 1040px;
+  border-radius: 8px;
+  margin-top: 50px;
+}
+
+.hoverinfo {
+  border: none !important;
+  box-shadow: none !important;
+  font-size: 12px !important;
+  font-weight: normal !important;
+  padding: 5px 10px !important;
+  opacity: .9;
+}
