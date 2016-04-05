@@ -14,3 +14,12 @@
   padding: 5px 10px !important;
   opacity: .9;
 }
+
+.datamaps-subunit:hover {
+  cursor: pointer;
+}
+
+.datamaps-subunit.active {
+  fill: #f07464 !important;
+  stroke-width: 2px !important;
+}
