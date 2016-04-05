@@ -12,10 +12,10 @@ export default Ember.Component.extend({
       //TODO: fix repaint issue
       //There is a rendering bug with this code. Occasionally the class will be
       //correctly removed, but the SVG element will remain highlighted
-      $('.datamaps-subunit').attr('class', function(index, classNames) {
+      Ember.$('.datamaps-subunit').attr('class', function(index, classNames) {
         return classNames.replace('active', '');
       });
-      $(selectorString).attr('class', function(index, classNames) {
+      Ember.$(selectorString).attr('class', function(index, classNames) {
         return classNames + ' active';
       });
     });
@@ -25,8 +25,12 @@ export default Ember.Component.extend({
     let mapComponent = this;
     return new Datamap({
       element: document.getElementById('world-map-container'),
+      fills: {
+        defaultFill: '#555556'
+      },
 
       geographyConfig: {
+        borderColor: '#bfbfc0',
         highlightFillColor: '#f07464',
         highlightBorderColor: '#fff',
         highlightBorderWidth: 1

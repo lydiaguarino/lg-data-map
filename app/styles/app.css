@@ -1,18 +1,30 @@
+body {
+  background-color: #2B2B2D;
+  color: #bfbfc0;
+  font-family: 'Raleway', sans-serif;
+}
+
+h1 {
+  margin: 50px;
+  font-weight: 200;
+}
+
 #world-map-container {
-  background-color: #495867;
   height: 550px;
   min-width: 1040px;
-  border-radius: 8px;
   margin-top: 50px;
+  border-right: 1px dashed #bfbfc0;
+  border-left: 1px dashed #bfbfc0;
 }
 
 .hoverinfo {
   border: none !important;
+  color: #2B2B2D;
   box-shadow: none !important;
   font-size: 12px !important;
   font-weight: normal !important;
   padding: 5px 10px !important;
-  opacity: .9;
+  opacity: .8;
 }
 
 .datamaps-subunit:hover {
@@ -21,5 +33,5 @@
 
 .datamaps-subunit.active {
   fill: #f07464 !important;
-  stroke-width: 2px !important;
+  stroke: #fff !important;
 }
