@@ -1,9 +1,15 @@
 <h1>
-  {{#if countrySelectionName}}
-    {{countrySelectionName}}
+  {{#if countryData.x.value}}
+    <a target="_blank" href="{{countryData.x.value}}"><h1>{{countryData.n.value}}</h1></a>
   {{else}}
     Select A Country
   {{/if}}
 </h1>
 <div id="world-map-container">
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <p>{{countryData.p.value}}</p>
+    <p>{{countryData.a.value}}</p>
+  </div>
 </div>
