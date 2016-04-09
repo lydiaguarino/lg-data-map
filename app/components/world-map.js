@@ -33,6 +33,8 @@ export default Ember.Component.extend({
   requestData(queryUrl, geography, mapComponent){
     Ember.$.ajax({
       dataType: "jsonp",
+      accept: "application/json",
+      contentType: "application/sparql-query",
       url: queryUrl,
       success: function( data ) {
         let queryResults = data.results.bindings[0];
