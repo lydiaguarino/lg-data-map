@@ -11,7 +11,7 @@ h1 {
 
 #world-map-container {
   height: 550px;
-  min-width: 1040px;
+  min-width: 1200px;
   margin-top: 50px;
   border-right: 1px dashed #bfbfc0;
   border-left: 1px dashed #bfbfc0;
@@ -31,7 +31,16 @@ h1 {
   cursor: pointer;
 }
 
-.datamaps-subunit.active {
-  fill: #f07464 !important;
-  stroke: #fff !important;
+.loading-data {
+  height: 550px;
+  min-width: 1200px;
+  background-color: #000;
+  opacity: .7;
+  color: white;
+  font-size: 3em;
+  text-align: center;
+  vertical-align: middle;
+  position: absolute;
+  top: 190px;
+  z-index: 10;
 }

@@ -1,15 +1,34 @@
 <h1>
   {{#if countryData.x.value}}
-    <a target="_blank" href="{{countryData.x.value}}"><h1>{{countryData.n.value}}</h1></a>
+    <a target="_blank" href="{{countryData.x.value}}"><h1>{{countryData.name.value}}</h1></a>
   {{else}}
     Select A Country
   {{/if}}
 </h1>
-<div id="world-map-container">
+{{#if queryError}}
+  <pre>{{queryError}}</pre>
+{{/if}}
+<div class="wrapper row">
+  <div id="world-map-container">
+  </div>
+  {{#if loadingDetails}}
+    <div class="loading-data">Fetching results for: {{countrySelection.properties.name}}</div>
+  {{/if}}
 </div>
 <div class="row">
   <div class="col-md-12">
-    <p>{{countryData.p.value}}</p>
-    <p>{{countryData.a.value}}</p>
+    <h3>SPARQL Query</h3>
+    {{#if currentQuery}}<pre>{{currentQuery}}</pre>{{/if}}
+    <h3>DBpedia Response</h3>
+    {{#if countryData}}<pre>{{countryDataString}}</pre>{{/if}}
+    <h3>{{countryData.name.value}} Details</h3>
+    {{#if countryData.pop}} <p>Population: {{countryData.pop.value}}</p>{{/if}}
+    {{#if countryData.lat}}<p>Latitude: {{countryData.lat.value}}</p>{{/if}}
+    {{#if countryData.long}} <p>Longitude: {{countryData.long.value}}</p>{{/if}}
+    {{#if countryData.cur}}<p>Currency: <a target="_blank" href={{countryData.cur.value}}>{{linked-resource countryData.cur.value}}</a></p>{{/if}}
+    {{#if countryData.cap}}<p>Capital: <a target="_blank" href={{countryData.cap.value}}>{{linked-resource countryData.cap.value}}</a></p>{{/if}}
+    {{#if countryData.lang}}<p>Official Language: <a target="_blank" href={{countryData.lang.value}}>{{linked-resource countryData.lang.value}}</a></p>{{/if}}
+    <h3>Description</h3>
+    {{#if countryData.ab}}<p>{{countryData.ab.value}}</p>{{/if}}
   </div>
 </div>

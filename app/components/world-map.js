@@ -4,9 +4,57 @@ import Datamap from 'npm:datamaps';
 export default Ember.Component.extend({
   classNames: ['row'],
   $mapObject: null,
+  loadingDetails: false,
+  queryError: null,
   countrySelection: null,
   previousSelection: null,
+  currentQuery: null,
   countryData: null,
+  countryDataString: Ember.computed('countryData', function(){
+    let data = JSON.stringify(this.get('countryData'));
+    return data;
+  }),
+
+  displayCountryData(queryResults,  mapComponent) {
+    mapComponent.setProperties({
+      countryData: queryResults,
+      loadingDetails: false
+    });
+  },
+
+  handleFailedQuery(mapComponent) {
+    mapComponent.setProperties({
+      queryError: 'DBpedia had trouble processing this request',
+      loadingDetails: false
+    });
+  },
+
+  handleSuccessfulQuery(data, mapComponent) {
+    let queryResults = data.results.bindings[0];
+    if(queryResults) {
+      mapComponent.displayCountryData(queryResults, mapComponent);
+    } else {
+      mapComponent.setProperties({
+        queryError: `No results were found for ${geography.properties.name}`,
+        loadingDetails: false
+      });
+    }
+  },
+
+  requestData(queryUrl, geography, mapComponent) {
+    Ember.$.ajax({
+      dataType: "jsonp",
+      accept: "application/json",
+      contentType: "application/sparql-query",
+      url: queryUrl,
+      success: function(data) {
+        mapComponent.handleSuccessfulQuery(data, mapComponent);
+      },
+      fail: function() {
+        mapComponent.handleFailedQuery(mapComponent);
+      }
+    });
+  },
 
   highlightActiveCountry(geography) {
     let activeCountry = geography.id;
@@ -20,59 +68,46 @@ export default Ember.Component.extend({
     $mapObject.updateChoropleth(dataObject);
   },
 
-  displayCountryData(queryResults, geography, mapComponent) {
-    let previous = mapComponent.get('countrySelection');
+  buildQuery(geography, mapComponent) {
+    let query = [
+      "SELECT * WHERE {\n",
+      "?x a dbo:Country.\n",
+      "?x rdfs:label \"" + geography.properties.name + "\"@en.\n",
+      "?x dbp:commonName ?name.\n",
+      "?x dbo:populationTotal ?pop.\n",
+      "?x geo:lat ?lat.\n",
+      "?x geo:long ?long.\n",
+      "?x dbo:officialLanguage ?lang.\n",
+      "?x dbo:currency ?cur.\n",
+      "?x dbo:capital ?cap.\n",
+      "?x dbo:abstract ?ab.\n",
+      "FILTER langMatches(lang(?ab),'en')\n",
+      "}"
+    ].join(" ");
+    let queryUrl = "http://dbpedia.org/sparql?query=" + encodeURI(query) + "&format=json";
+    mapComponent.set('currentQuery', query);
+    mapComponent.requestData(queryUrl, geography, mapComponent);
+  },
+
+  updateMapState(geography, mapComponent) {
     mapComponent.setProperties({
-      previousSelection: previous,
-      countrySelection: geography,
-      countryData: queryResults
+      countryData: null,
+      queryError: null,
+      loadingDetails: true,
+      previousSelection: mapComponent.get('countrySelection'),
+      countrySelection: geography
     });
     mapComponent.highlightActiveCountry(geography);
   },
 
-  requestData(queryUrl, geography, mapComponent){
-    Ember.$.ajax({
-      dataType: "jsonp",
-      accept: "application/json",
-      contentType: "application/sparql-query",
-      url: queryUrl,
-      success: function( data ) {
-        let queryResults = data.results.bindings[0];
-        if(queryResults) {
-          mapComponent.displayCountryData(queryResults, geography, mapComponent);
-        } else {
-          console.log('No results were found for', geography.properties.name);
-        }
-      },
-      fail: function( jqXHR, textStatus, error ) {
-        console.log('error', error);
-      }
-    });
-  },
-
-  buildQuery: function(geography, mapComponent){
-    let query = [
-      "SELECT * WHERE {",
-      "?x a dbo:Country.",
-      "?x rdfs:label \"" + geography.properties.name + "\"@en.",
-      "?x dbp:commonName ?n.",
-      "?x dbo:populationTotal ?p.",
-      "?x dbo:abstract ?a.",
-      "FILTER langMatches(lang(?a),'en')",
-      "}"
-    ].join(" ");
-    let queryUrl = "http://dbpedia.org/sparql?query=" + encodeURI(query) + "&format=json";
-    mapComponent.requestData(queryUrl, geography, mapComponent);
-  },
-
   setupClickHandler(datamap, mapComponent) {
     datamap.svg.selectAll('.datamaps-subunit').on('click', function(geography) {
-      mapComponent.set('countryData', null);
+      mapComponent.updateMapState(geography, mapComponent);
       mapComponent.buildQuery(geography, mapComponent);
     });
   },
 
-  createNewMap() {
+  initializeMap() {
     let mapComponent = this;
     this.set('$mapObject', new Datamap({
       element: document.getElementById('world-map-container'),
@@ -95,6 +130,6 @@ export default Ember.Component.extend({
 
   didInsertElement() {
     this._super(...arguments);
-    this.createNewMap();
+    this.initializeMap();
   }
 });
