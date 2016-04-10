@@ -14,13 +14,13 @@ export default Ember.Component.extend({
   opt: {
     resource: {include: true},
     name: {include: true},
-    population: {include: true, query:"?x dbo:populationTotal ?pop.\n"},
-    lat: {include: false, query:"?x geo:lat ?lat.\n"},
-    long: {include: false, query:"?x geo:long ?long.\n"},
-    language: {include: false, query:"?x dbo:officialLanguage ?lang.\n"},
-    currency: {include: false, query:"?x dbo:currency ?cur.\n"},
-    capital: {include: false, query:"?x dbo:capital ?cap.\n"},
-    abstract: {include: false, query:"?x dbo:abstract ?ab.\n FILTER langMatches(lang(?ab),'en')\n"}
+    population: {include: true, query:"OPTIONAL {?x dbo:populationTotal ?pop}.\n"},
+    lat: {include: false, query:"OPTIONAL {?x geo:lat ?lat}.\n"},
+    long: {include: false, query:"OPTIONAL {?x geo:long ?long}.\n"},
+    language: {include: false, query:"OPTIONAL {?x dbo:officialLanguage ?lang}.\n"},
+    currency: {include: false, query:"OPTIONAL {?x dbo:currency ?cur}.\n"},
+    capital: {include: false, query:"OPTIONAL {?x dbo:capital ?cap}.\n"},
+    abstract: {include: false, query:"OPTIONAL {?x dbo:abstract ?ab}.\n FILTER langMatches(lang(?ab),'en')\n"}
   },
   countryDataString: Ember.computed('countryData', function(){
     let data = JSON.stringify(this.get('countryData'));
