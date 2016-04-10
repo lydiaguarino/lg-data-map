@@ -1,10 +1,10 @@
 <div class="wrapper row">
   <div class="col-md-9 col-xs-12">
     {{#if countryData.x.value}}
-      <div class="error-message">Results were found for <a target="_blank" href="{{countryData.x.value}}">{{countryData.name.value}}</a></div>
+      <div class="error-message">{{fa-icon "check"}} Results were found for <a target="_blank" href="{{countryData.x.value}}">{{countryData.name.value}}</a></div>
     {{/if}}
     {{#if queryError}}
-      <div class="error-message">{{queryError}}</div>
+      <div class="error-message">{{fa-icon "frown-o"}} {{queryError}}</div>
     {{/if}}
     <div id="world-map-container">
     </div>
@@ -13,7 +13,16 @@
     {{/if}}
   </div>
   <div class="col-md-3 col-xs-12">
-    <h3>SPARQL Query <span class="pull-right" {{action 'toggleDropdown'}}>{{fa-icon "gear"}}</span></h3>
+    <h3>SPARQL Query
+      <span class="pull-right icon-button" {{action 'toggleDropdown'}}>
+        {{fa-icon "gear"}}
+      </span>
+      <span class="pull-right icon-button">
+        <a target="_blank" href="https://github.com/lydiaguarino/lg-data-map">
+          {{fa-icon "github"}}
+        </a>
+      </span>
+    </h3>
     {{#if showOptions}}
       <label>
         {{input type="checkbox" checked=opt.name.include disabled=true}}

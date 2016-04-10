@@ -53,6 +53,11 @@ h1 {
   color: white;
   font-size: 1em;
   position: absolute;
-  top: 50px;
+  top: 20px;
   z-index: 10;
+  color: #bfbfc0;
+}
+
+.icon-button {
+  margin-left: 10px;
 }
