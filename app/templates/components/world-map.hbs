@@ -55,6 +55,7 @@
 
     {{#if currentQuery}}
       <pre>{{currentQuery}}</pre>
+      <button class="btn btn-primary" {{action "resetQuery"}}>Reset Query</button>
     {{else}}
       <pre>
 Click on a country
@@ -64,7 +65,7 @@ to build a SPARQL Query.
   </div>
 </div>
 <div class="row">
-  <div class="col-md-12">
+  <div class="col-md-9">
     {{#if countryData}}
       <h3>Raw DBpedia Response (JSON)</h3>
       <pre>{{countryDataString}}</pre>

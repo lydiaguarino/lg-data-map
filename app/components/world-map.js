@@ -151,8 +151,14 @@ export default Ember.Component.extend({
   },
 
   actions: {
-    toggleDropdown(){
+    toggleDropdown() {
       this.toggleProperty('showOptions');
+    },
+    resetQuery() {
+      this.setProperties({
+        currentQuery: null,
+        countryData: null
+      });
     }
   }
 });
