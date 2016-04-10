@@ -1,34 +1,85 @@
-<h1>
-  {{#if countryData.x.value}}
-    <a target="_blank" href="{{countryData.x.value}}"><h1>{{countryData.name.value}}</h1></a>
-  {{else}}
-    Select A Country
-  {{/if}}
-</h1>
-{{#if queryError}}
-  <pre>{{queryError}}</pre>
-{{/if}}
 <div class="wrapper row">
-  <div id="world-map-container">
+  <div class="col-md-9 col-xs-12">
+    {{#if countryData.x.value}}
+      <div class="error-message">Results were found for <a target="_blank" href="{{countryData.x.value}}">{{countryData.name.value}}</a></div>
+    {{/if}}
+    {{#if queryError}}
+      <div class="error-message">{{queryError}}</div>
+    {{/if}}
+    <div id="world-map-container">
+    </div>
+    {{#if loadingDetails}}
+      <div class="loading-data">{{fa-icon "spinner" spin=true}} Fetching results for: <br> {{countrySelection.properties.name}}</div>
+    {{/if}}
   </div>
-  {{#if loadingDetails}}
-    <div class="loading-data">Fetching results for: {{countrySelection.properties.name}}</div>
-  {{/if}}
+  <div class="col-md-3 col-xs-12">
+    <h3>SPARQL Query <span class="pull-right" {{action 'toggleDropdown'}}>{{fa-icon "gear"}}</span></h3>
+    {{#if showOptions}}
+      <label>
+        {{input type="checkbox" checked=opt.name.include disabled=true}}
+        Country Name
+      </label>
+      <label>
+        {{input type="checkbox" checked=opt.resource.include disabled=true}}
+        Resource Link
+      </label>
+      <label>
+        {{input type="checkbox" checked=opt.population.include}}
+        Population
+      </label>
+      <label>
+        {{input type="checkbox" checked=opt.lat.include}}
+        Latitude
+      </label>
+      <label>
+        {{input type="checkbox" checked=opt.long.include}}
+        Longitude
+      </label>
+      <label>
+        {{input type="checkbox" checked=opt.language.include}}
+        Language
+      </label>
+      <label>
+        {{input type="checkbox" checked=opt.currency.include}}
+        Currency
+      </label>
+      <label>
+        {{input type="checkbox" checked=opt.capital.include}}
+        Capital
+      </label>
+      <label>
+        {{input type="checkbox" checked=opt.abstract.include}}
+        Abstract
+      </label>
+    {{/if}}
+
+    {{#if currentQuery}}
+      <pre>{{currentQuery}}</pre>
+    {{else}}
+      <pre>
+Click on a country
+to build a SPARQL Query.
+      </pre>
+    {{/if}}
+  </div>
 </div>
 <div class="row">
   <div class="col-md-12">
-    <h3>SPARQL Query</h3>
-    {{#if currentQuery}}<pre>{{currentQuery}}</pre>{{/if}}
-    <h3>DBpedia Response</h3>
-    {{#if countryData}}<pre>{{countryDataString}}</pre>{{/if}}
-    <h3>{{countryData.name.value}} Details</h3>
-    {{#if countryData.pop}} <p>Population: {{countryData.pop.value}}</p>{{/if}}
-    {{#if countryData.lat}}<p>Latitude: {{countryData.lat.value}}</p>{{/if}}
-    {{#if countryData.long}} <p>Longitude: {{countryData.long.value}}</p>{{/if}}
-    {{#if countryData.cur}}<p>Currency: <a target="_blank" href={{countryData.cur.value}}>{{linked-resource countryData.cur.value}}</a></p>{{/if}}
-    {{#if countryData.cap}}<p>Capital: <a target="_blank" href={{countryData.cap.value}}>{{linked-resource countryData.cap.value}}</a></p>{{/if}}
-    {{#if countryData.lang}}<p>Official Language: <a target="_blank" href={{countryData.lang.value}}>{{linked-resource countryData.lang.value}}</a></p>{{/if}}
-    <h3>Description</h3>
-    {{#if countryData.ab}}<p>{{countryData.ab.value}}</p>{{/if}}
+    {{#if countryData}}
+      <h3>Raw DBpedia Response (JSON)</h3>
+      <pre>{{countryDataString}}</pre>
+      <h3>Query Details for {{countryData.name.value}}</h3>
+      {{#if countryData.x}}<p>Resource: <a target="_blank" href="{{countryData.x.value}}">{{countryData.name.value}}</a></p>{{/if}}
+      {{#if countryData.pop}}<p>Population: {{countryData.pop.value}}</p>{{/if}}
+      {{#if countryData.lat}}<p>Latitude: {{countryData.lat.value}}</p>{{/if}}
+      {{#if countryData.long}} <p>Longitude: {{countryData.long.value}}</p>{{/if}}
+      {{#if countryData.cur}}<p>Currency: <a target="_blank" href={{countryData.cur.value}}>{{linked-resource countryData.cur.value}}</a></p>{{/if}}
+      {{#if countryData.cap}}<p>Capital: <a target="_blank" href={{countryData.cap.value}}>{{linked-resource countryData.cap.value}}</a></p>{{/if}}
+      {{#if countryData.lang}}<p>Official Language: <a target="_blank" href={{countryData.lang.value}}>{{linked-resource countryData.lang.value}}</a></p>{{/if}}
+      {{#if countryData.ab}}
+        <h3>Description</h3>
+        <p>{{countryData.ab.value}}</p>
+      {{/if}}
+    {{/if}}
   </div>
 </div>

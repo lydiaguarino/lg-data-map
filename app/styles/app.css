@@ -10,14 +10,15 @@ h1 {
 }
 
 #world-map-container {
-  height: 550px;
-  min-width: 1200px;
+  height: 400px;
   margin-top: 50px;
   border-right: 1px dashed #bfbfc0;
   border-left: 1px dashed #bfbfc0;
+  overflow: hidden;
 }
 
 .hoverinfo {
+  display: none !important;
   border: none !important;
   color: #2B2B2D;
   box-shadow: none !important;
@@ -32,8 +33,10 @@ h1 {
 }
 
 .loading-data {
-  height: 550px;
-  min-width: 1200px;
+  padding-top: 150px;
+  width: 97%;
+  margin: auto;
+  height: 400px;
   background-color: #000;
   opacity: .7;
   color: white;
@@ -41,6 +44,15 @@ h1 {
   text-align: center;
   vertical-align: middle;
   position: absolute;
-  top: 190px;
+  top: 50px;
+  z-index: 10;
+}
+
+.error-message {
+  padding-left: 12px;
+  color: white;
+  font-size: 1em;
+  position: absolute;
+  top: 50px;
   z-index: 10;
 }

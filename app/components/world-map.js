@@ -10,31 +10,43 @@ export default Ember.Component.extend({
   previousSelection: null,
   currentQuery: null,
   countryData: null,
+  showOptions: false,
+  opt: {
+    resource: {include: true},
+    name: {include: true},
+    population: {include: true, query:"?x dbo:populationTotal ?pop.\n"},
+    lat: {include: false, query:"?x geo:lat ?lat.\n"},
+    long: {include: false, query:"?x geo:long ?long.\n"},
+    language: {include: false, query:"?x dbo:officialLanguage ?lang.\n"},
+    currency: {include: false, query:"?x dbo:currency ?cur.\n"},
+    capital: {include: false, query:"?x dbo:capital ?cap.\n"},
+    abstract: {include: false, query:"?x dbo:abstract ?ab.\n FILTER langMatches(lang(?ab),'en')\n"}
+  },
   countryDataString: Ember.computed('countryData', function(){
     let data = JSON.stringify(this.get('countryData'));
     return data;
   }),
 
   displayCountryData(queryResults,  mapComponent) {
-    mapComponent.setProperties({
+    return mapComponent.setProperties({
       countryData: queryResults,
       loadingDetails: false
     });
   },
 
   handleFailedQuery(mapComponent) {
-    mapComponent.setProperties({
+    return mapComponent.setProperties({
       queryError: 'DBpedia had trouble processing this request',
       loadingDetails: false
     });
   },
 
-  handleSuccessfulQuery(data, mapComponent) {
+  handleSuccessfulQuery(data, geography, mapComponent) {
     let queryResults = data.results.bindings[0];
     if(queryResults) {
-      mapComponent.displayCountryData(queryResults, mapComponent);
+      return mapComponent.displayCountryData(queryResults, mapComponent);
     } else {
-      mapComponent.setProperties({
+      return mapComponent.setProperties({
         queryError: `No results were found for ${geography.properties.name}`,
         loadingDetails: false
       });
@@ -42,16 +54,17 @@ export default Ember.Component.extend({
   },
 
   requestData(queryUrl, geography, mapComponent) {
-    Ember.$.ajax({
+    return Ember.$.ajax({
+      type: "GET",
       dataType: "jsonp",
       accept: "application/json",
       contentType: "application/sparql-query",
       url: queryUrl,
       success: function(data) {
-        mapComponent.handleSuccessfulQuery(data, mapComponent);
+        return mapComponent.handleSuccessfulQuery(data, geography, mapComponent);
       },
-      fail: function() {
-        mapComponent.handleFailedQuery(mapComponent);
+      error: function() {
+        return mapComponent.handleFailedQuery(mapComponent);
       }
     });
   },
@@ -65,51 +78,55 @@ export default Ember.Component.extend({
       dataObject[previousCountry] = { fillKey: 'visited' };
     }
     dataObject[activeCountry] = { fillKey: 'active' };
-    $mapObject.updateChoropleth(dataObject);
+    return $mapObject.updateChoropleth(dataObject);
   },
 
   buildQuery(geography, mapComponent) {
+    let opt = mapComponent.get('opt');
+    let validateInclude = function(opt) {
+      return opt.include ? opt.query : "";
+    };
     let query = [
       "SELECT * WHERE {\n",
       "?x a dbo:Country.\n",
       "?x rdfs:label \"" + geography.properties.name + "\"@en.\n",
       "?x dbp:commonName ?name.\n",
-      "?x dbo:populationTotal ?pop.\n",
-      "?x geo:lat ?lat.\n",
-      "?x geo:long ?long.\n",
-      "?x dbo:officialLanguage ?lang.\n",
-      "?x dbo:currency ?cur.\n",
-      "?x dbo:capital ?cap.\n",
-      "?x dbo:abstract ?ab.\n",
-      "FILTER langMatches(lang(?ab),'en')\n",
+      validateInclude(opt.population),
+      validateInclude(opt.lat),
+      validateInclude(opt.long),
+      validateInclude(opt.language),
+      validateInclude(opt.currency),
+      validateInclude(opt.capital),
+      validateInclude(opt.abstract),
       "}"
     ].join(" ");
     let queryUrl = "http://dbpedia.org/sparql?query=" + encodeURI(query) + "&format=json";
     mapComponent.set('currentQuery', query);
-    mapComponent.requestData(queryUrl, geography, mapComponent);
+    return mapComponent.requestData(queryUrl, geography, mapComponent);
   },
 
   updateMapState(geography, mapComponent) {
+    let previousSelection = mapComponent.get('countrySelection');
     mapComponent.setProperties({
       countryData: null,
       queryError: null,
       loadingDetails: true,
-      previousSelection: mapComponent.get('countrySelection'),
+      previousSelection: previousSelection,
       countrySelection: geography
     });
-    mapComponent.highlightActiveCountry(geography);
+    return mapComponent.highlightActiveCountry(geography);
   },
 
   setupClickHandler(datamap, mapComponent) {
     datamap.svg.selectAll('.datamaps-subunit').on('click', function(geography) {
       mapComponent.updateMapState(geography, mapComponent);
-      mapComponent.buildQuery(geography, mapComponent);
+      return mapComponent.buildQuery(geography, mapComponent);
     });
   },
 
   initializeMap() {
     let mapComponent = this;
-    this.set('$mapObject', new Datamap({
+    return this.set('$mapObject', new Datamap({
       element: document.getElementById('world-map-container'),
       fills: {
         defaultFill: '#555556',
@@ -123,13 +140,19 @@ export default Ember.Component.extend({
         highlightBorderWidth: 1
       },
       done: function(datamap) {
-        mapComponent.setupClickHandler(datamap, mapComponent);
+        return mapComponent.setupClickHandler(datamap, mapComponent);
       }
     }));
   },
 
   didInsertElement() {
     this._super(...arguments);
-    this.initializeMap();
+    return this.initializeMap();
+  },
+
+  actions: {
+    toggleDropdown(){
+      this.toggleProperty('showOptions');
+    }
   }
 });
