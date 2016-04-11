@@ -2,11 +2,37 @@ import Ember from 'ember';
 import Datamap from 'npm:datamaps';
 
 export default Ember.Component.extend({
-  sparqler: Ember.inject.service('sparqler'),
+  /**
+   * A reference to the jQuery datamap object
+   *
+   * @property $mapObject
+   * @type jQuery Object
+   * @default null
+   */
   $mapObject: null,
+
+  /**
+   * The currently selected geography object.
+   *
+   * @property countrySelection
+   * @type Object
+   * @default null
+   */
   countrySelection: null,
+
+  /**
+   * The previously selected geography object.
+   *
+   * @property countrySelection
+   * @type Object
+   * @default null
+   */
   previousSelection: null,
 
+  /**
+   * When the user clicks a country, highlight it as active. Update the previous
+   * country fill to show that it has already been visited.
+   */
   highlightActiveCountry(geography) {
     let activeCountry = geography.id;
     let previousCountry = this.get('previousSelection.id');
@@ -19,6 +45,9 @@ export default Ember.Component.extend({
     return $mapObject.updateChoropleth(dataObject);
   },
 
+  /**
+   * When the user clicks a country, capture and handle the geography data.
+   */
   updateMapState(geography) {
     let previousSelection = this.get('countrySelection');
     this.setProperties({
@@ -28,6 +57,11 @@ export default Ember.Component.extend({
     return this.highlightActiveCountry(geography);
   },
 
+ /**
+   * Once the map has rendered, add click handlers to emit an action to the
+   * parent application scope and provide the user with visual feedback that
+   * a country element was clicked.
+   */
   setupClickHandler(datamap, mapComponent) {
     datamap.svg.selectAll('.datamaps-subunit').on('click', function(geography) {
       mapComponent.updateMapState(geography);
@@ -35,6 +69,9 @@ export default Ember.Component.extend({
     });
   },
 
+  /**
+   * Once the application has loaded, initialize the datamaps jQuery component.
+   */
   initializeMap() {
     let mapComponent = this;
     return this.set('$mapObject', new Datamap({
@@ -56,11 +93,18 @@ export default Ember.Component.extend({
     }));
   },
 
+  /**
+   * Ember lifecycle hook to delay DOM manipulation until it is ready.
+   */
   didInsertElement() {
     this._super(...arguments);
     return this.initializeMap();
   },
 
+  /**
+   * Ember lifecycle hook to tear down jQuery event listeners when the component
+   * is destroyed.
+   */
   willDestroyElement() {
     this._super(...arguments);
     Ember.$('.datamaps-subunit').off('click');

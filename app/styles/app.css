@@ -4,11 +4,6 @@ body {
   font-family: 'Raleway', sans-serif;
 }
 
-h1 {
-  margin: 50px;
-  font-weight: 200;
-}
-
 pre {
   word-wrap: normal;
   overflow: auto;
@@ -37,7 +32,7 @@ pre {
   cursor: pointer;
 }
 
-.loading-data {
+.map-panel__loading-modal {
   padding-top: 150px;
   width: 97%;
   margin: auto;
@@ -53,7 +48,7 @@ pre {
   z-index: 10;
 }
 
-.query-status-message {
+.map-panel__query-status {
   padding-left: 12px;
   color: white;
   font-size: 1em;
@@ -63,6 +58,6 @@ pre {
   color: #bfbfc0;
 }
 
-.icon-button {
+.query-panel__icon-button {
   margin-left: 10px;
 }
