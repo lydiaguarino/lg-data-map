@@ -1,4 +1,114 @@
 <div class="container">
-  {{world-map}}
-  {{outlet}}
+
+  <div class="wrapper row">
+    <div class="col-md-9 col-xs-12">
+      {{#if s.countryData.x.value}}
+        <div class="query-status-message spec-status">{{fa-icon "check"}} Results were found for <a target="_blank" href="{{s.countryData.x.value}}">{{s.countryData.name.value}}</a></div>
+      {{/if}}
+      {{#if s.queryError}}
+        <div class="query-status-message spec-status">{{fa-icon "frown-o"}} {{s.queryError}}</div>
+      {{/if}}
+
+
+
+      {{world-map countrySelectionChanged='countrySelectionChanged'}}
+
+
+
+      {{#if s.loadingDetails}}
+        <div class="loading-data spec-loading-modal">{{fa-icon "cog" spin=true}} Fetching results for: <br> {{s.countrySelection.properties.name}}</div>
+      {{/if}}
+    </div>
+
+
+
+    <div class="col-md-3 col-xs-12 query-panel">
+      <h3>SPARQL Query
+        <span class="pull-right icon-button spec-query-toggle-menu" {{action 'toggleDropdown'}}>
+          <a href="">
+            {{fa-icon "gear"}}
+          </a>
+        </span>
+        <span class="pull-right icon-button spec-github-link">
+          <a target="_blank" href="https://github.com/lydiaguarino/lg-data-map">
+            {{fa-icon "github"}}
+          </a>
+        </span>
+      </h3>
+      {{#if showOptions}}
+        <div class="spec-query-menu query-panel__menu">
+          <label class="query-panel__menu__option spec-query-name">
+            {{input type="checkbox" checked=s.opts.name.include disabled=true}}
+            Country Name
+          </label>
+          <label class="query-panel__menu__option spec-query-resource">
+            {{input type="checkbox" checked=s.opts.resource.include disabled=true}}
+            Resource Link
+          </label>
+          <label class="query-panel__menu__option spec-query-pop">
+            {{input type="checkbox" checked=s.opts.population.include}}
+            Population
+          </label>
+          <label class="query-panel__menu__option spec-query-lat">
+            {{input type="checkbox" checked=s.opts.lat.include}}
+            Latitude
+          </label>
+          <label class="query-panel__menu__option spec-query-long">
+            {{input type="checkbox" checked=s.opts.long.include}}
+            Longitude
+          </label>
+          <label class="query-panel__menu__option spec-query-lang">
+            {{input type="checkbox" checked=s.opts.language.include}}
+            Language
+          </label>
+          <label class="query-panel__menu__option spec-query-cur">
+            {{input type="checkbox" checked=s.opts.currency.include}}
+            Currency
+          </label>
+          <label class="query-panel__menu__option spec-query-cap">
+            {{input type="checkbox" checked=s.opts.capital.include}}
+            Capital
+          </label>
+          <label class="query-panel__menu__option spec-query-ab">
+            {{input type="checkbox" checked=s.opts.abstract.include}}
+            Abstract
+          </label>
+        </div>
+      {{/if}}
+
+      {{#if s.currentQuery}}
+        <pre class="spec-query-preview">{{s.currentQuery}}</pre>
+        <button class="btn btn-primary" {{action "resetQuery"}}>Reset Query</button>
+      {{else}}
+        <pre class="spec-query-instructions">Click on a country
+to build a SPARQL Query.</pre>
+      {{/if}}
+    </div>
+  </div>
+
+
+
+
+
+  <div class="row">
+    <div class="col-md-9">
+      {{#if s.countryData}}
+        <h3>Raw DBpedia Response (JSON)</h3>
+        <pre class="spec-raw-response">{{countryDataString}}</pre>
+        <h3>Query Details for {{s.countryData.name.value}}</h3>
+        {{#if s.countryData.x}}<p>Resource: <a target="_blank" href="{{s.countryData.x.value}}">{{s.countryData.name.value}}</a></p>{{/if}}
+        {{#if s.countryData.pop}}<p class="spec-pop-response">Population: {{large-num s.countryData.pop.value}}</p>{{/if}}
+        {{#if s.countryData.lat}}<p>Latitude: {{s.countryData.lat.value}}</p>{{/if}}
+        {{#if s.countryData.long}} <p>Longitude: {{s.countryData.long.value}}</p>{{/if}}
+        {{#if s.countryData.cur}}<p>Currency: <a target="_blank" href={{s.countryData.cur.value}}>{{linked-resource s.countryData.cur.value}}</a></p>{{/if}}
+        {{#if s.countryData.cap}}<p>Capital: <a target="_blank" href={{s.countryData.cap.value}}>{{linked-resource s.countryData.cap.value}}</a></p>{{/if}}
+        {{#if s.countryData.lang}}<p>Official Language: <a target="_blank" href={{s.countryData.lang.value}}>{{linked-resource s.countryData.lang.value}}</a></p>{{/if}}
+        {{#if s.countryData.ab}}
+          <h3>Description</h3>
+          <p>{{s.countryData.ab.value}}</p>
+        {{/if}}
+      {{/if}}
+    </div>
+  </div>
+
 </div>

@@ -53,7 +53,7 @@ pre {
   z-index: 10;
 }
 
-.error-message {
+.query-status-message {
   padding-left: 12px;
   color: white;
   font-size: 1em;
