@@ -12,64 +12,66 @@
       <div class="loading-data">{{fa-icon "cog" spin=true}} Fetching results for: <br> {{countrySelection.properties.name}}</div>
     {{/if}}
   </div>
-  <div class="col-md-3 col-xs-12">
+  <div class="col-md-3 col-xs-12 query-panel">
     <h3>SPARQL Query
-      <span class="pull-right icon-button" {{action 'toggleDropdown'}}>
-        {{fa-icon "gear"}}
+      <span class="pull-right icon-button spec-query-toggle-menu" {{action 'toggleDropdown'}}>
+        <a href="">
+          {{fa-icon "gear"}}
+        </a>
       </span>
-      <span class="pull-right icon-button">
+      <span class="pull-right icon-button spec-github-link">
         <a target="_blank" href="https://github.com/lydiaguarino/lg-data-map">
           {{fa-icon "github"}}
         </a>
       </span>
     </h3>
     {{#if showOptions}}
-      <label>
-        {{input type="checkbox" checked=opt.name.include disabled=true}}
-        Country Name
-      </label>
-      <label>
-        {{input type="checkbox" checked=opt.resource.include disabled=true}}
-        Resource Link
-      </label>
-      <label>
-        {{input type="checkbox" checked=opt.population.include}}
-        Population
-      </label>
-      <label>
-        {{input type="checkbox" checked=opt.lat.include}}
-        Latitude
-      </label>
-      <label>
-        {{input type="checkbox" checked=opt.long.include}}
-        Longitude
-      </label>
-      <label>
-        {{input type="checkbox" checked=opt.language.include}}
-        Language
-      </label>
-      <label>
-        {{input type="checkbox" checked=opt.currency.include}}
-        Currency
-      </label>
-      <label>
-        {{input type="checkbox" checked=opt.capital.include}}
-        Capital
-      </label>
-      <label>
-        {{input type="checkbox" checked=opt.abstract.include}}
-        Abstract
-      </label>
+      <div class="spec-query-menu query-panel__menu">
+        <label class="query-panel__menu__option spec-query-name">
+          {{input type="checkbox" checked=opt.name.include disabled=true}}
+          Country Name
+        </label>
+        <label class="query-panel__menu__option spec-query-resource">
+          {{input type="checkbox" checked=opt.resource.include disabled=true}}
+          Resource Link
+        </label>
+        <label class="query-panel__menu__option spec-query-pop">
+          {{input type="checkbox" checked=opt.population.include}}
+          Population
+        </label>
+        <label class="query-panel__menu__option spec-query-lat">
+          {{input type="checkbox" checked=opt.lat.include}}
+          Latitude
+        </label>
+        <label class="query-panel__menu__option spec-query-long">
+          {{input type="checkbox" checked=opt.long.include}}
+          Longitude
+        </label>
+        <label class="query-panel__menu__option spec-query-lang">
+          {{input type="checkbox" checked=opt.language.include}}
+          Language
+        </label>
+        <label class="query-panel__menu__option spec-query-cur">
+          {{input type="checkbox" checked=opt.currency.include}}
+          Currency
+        </label>
+        <label class="query-panel__menu__option spec-query-cap">
+          {{input type="checkbox" checked=opt.capital.include}}
+          Capital
+        </label>
+        <label class="query-panel__menu__option spec-query-ab">
+          {{input type="checkbox" checked=opt.abstract.include}}
+          Abstract
+        </label>
+      </div>
     {{/if}}
 
     {{#if currentQuery}}
-      <pre>{{currentQuery}}</pre>
-      <button class="btn btn-primary" {{action "resetQuery"}}>Reset Query</button>
+      <pre class="spec-query-preview">{{currentQuery}}</pre>
+      <button class="btn btn-primary spec-query-reset" {{action "resetQuery"}}>Reset Query</button>
     {{else}}
-      <pre>
-Click on a country
-to build a SPARQL Query.
-      </pre>
+      <pre class="spec-query-instructions">Click on a country
+to build a SPARQL Query.</pre>
     {{/if}}
   </div>
 </div>

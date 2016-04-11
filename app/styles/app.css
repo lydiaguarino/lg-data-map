@@ -9,6 +9,11 @@ h1 {
   font-weight: 200;
 }
 
+pre {
+  word-wrap: normal;
+  overflow: auto;
+}
+
 #world-map-container {
   height: 400px;
   margin-top: 50px;
